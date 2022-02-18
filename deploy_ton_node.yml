@@ -48,7 +48,20 @@
     - ton_node_deploy
     - ton_node_genconfig
     - monitoring_agent
-  tags: [ "basic" ]
+  tags: [ "never", "basic" ]
+
+- hosts: monitoring_agent_only
+  become: true
+  become_method: sudo
+  gather_facts: true
+  any_errors_fatal: true
+  vars_files:
+    - vars/system.yml
+    - vars/monitoring.yml
+  roles:
+    - system
+    - monitoring_agent_only
+  tags: [ "never", "monitoring_agent_only" ]
 
 - hosts: monitoring_server
   become: true
@@ -59,4 +72,4 @@
     - vars/monitoring.yml
   roles:
     - monitoring_server
-  tags: [ "never", "monitoring" ]
+  tags: [ "never", "monitoring_serv" ]

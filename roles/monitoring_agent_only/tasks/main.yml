@@ -1,0 +1,35 @@
+---
+
+- name: Include os specific tasks
+  include_tasks: "{{ ansible_pkg_mgr }}.yml"
+
+- name: Add telegraf user to ton group
+  user:
+    name: telegraf
+    groups: "{{ ton_node_group }}"
+    append: yes
+  ignore_errors: yes
+
+- name: Copy default telegraf config
+  copy:
+    src: "telegraf.conf"
+    dest: "/etc/telegraf/telegraf.conf"
+    owner: telegraf
+    group: telegraf
+  notify: restart_telegraf
+
+- name: Copy telegraf ton config
+  template:
+    src: "telegraf_freeton.conf.j2"
+    dest: "/etc/telegraf/telegraf.d/telegraf_freeton.conf"
+  notify: restart_telegraf
+
+- name: Fix telegraf dirs own
+  file:
+    path: "{{ item }}"
+    state: directory
+    recurse: yes
+    owner: telegraf
+    group: telegraf
+  loop:
+    - "/etc/telegraf"
