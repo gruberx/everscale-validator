@@ -3,13 +3,6 @@
 - name: Include os specific tasks
   include_tasks: "{{ ansible_pkg_mgr }}.yml"
 
-- name: Add telegraf user to ton group
-  user:
-    name: telegraf
-    groups: "{{ ton_node_group }}"
-    append: yes
-  ignore_errors: yes
-
 - name: Copy default telegraf config
   copy:
     src: "telegraf.conf"
