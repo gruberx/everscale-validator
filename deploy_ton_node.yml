@@ -64,6 +64,20 @@
     - monitoring_agent_only
   tags: [ "never", "monitoring_agent_only" ]
 
+  hosts: monitoring_agent
+  become: true
+  become_method: sudo
+  gather_facts: true
+  any_errors_fatal: true
+  vars_files:
+    - vars/ton_node.yml
+    - vars/system.yml
+    - vars/monitoring.yml
+  roles:
+    - system
+    - monitoring_agent
+  tags: [ "never", "monitoring_agent" ]
+
 - hosts: monitoring_server
   become: true
   become_method: sudo
